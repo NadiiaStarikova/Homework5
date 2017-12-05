@@ -1,0 +1,65 @@
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+public class CreationOrder {
+    @Test
+    public void CreationOrder() {
+        WebDriver driver = new ChromeDriver();
+        //1
+        driver.get("http://prestashop-automation.qatestlab.com.ua/");
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"content\"]/section/a")));
+        //2
+        driver.findElement(By.xpath("//*[@id=\"content\"]/section/a")).click();
+        //3
+        driver.findElement(By.xpath("//*[@id=\"js-product-list\"]/div[1]/article[5]/div/div[1]/h1/a")).click();
+        //4
+        driver.findElement(By.className("btn btn-primary add-to-cart")).click();
+        //5
+        driver.findElement(By.xpath("//*[@id=\"blockcart-modal\"]/div/div/div[2]/div/div[2]/div/a")).click();
+        //6 Проверить, что в корзине отображается одна позиция,
+        // название и цена добавленного товара соответствует значениям, которые отображались на странице товара.
+        WebElement quantity = driver.findElement(By.xpath("//*[@id=\"cart-subtotal-products\"]/span[1]"));
+        assertEquals("Quantity of product is incorrect", quantity.getText().equals("1 шт."));
+        System.out.println("Expected product quantity: 1 шт. Actual product quantity: "  + quantity.getText());
+        WebElement actualName = driver.findElement(By.xpath("//*[@id=\"main\"]/div/div[1]/div[1]/div[2]/ul/li/div/div[2]/div[1]/a"));
+        WebElement actualPrice = driver.findElement(By.xpath("//*[@id=\"main\"]/div/div[1]/div[1]/div[2]/ul/li/div/div[2]/div[2]/span"));
+        //7
+        driver.findElement(By.xpath("//*[@id=\"main\"]/div/div[2]/div/div[2]/div/a")).click();
+        //8. Заполнить поля Имя, Фамилия, E-mail (должно быть уникальным) и перейти к следующему шагу оформления заказа.
+        driver.findElement(By.xpath("//*[@id=\"customer-form\"]/section/div[2]/div[1]/input")).sendKeys("Nadiia");
+        driver.findElement(By.xpath("//*[@id=\"customer-form\"]/section/div[3]/div[1]/input")).sendKeys("Starikova");
+        driver.findElement(By.xpath("//*[@id=\"customer-form\"]/section/div[4]/div[1]/input")).sendKeys("nadiia.garkovych@gmail.com");
+        driver.findElement(By.xpath("//*[@id=\"customer-form\"]/footer/button")).click();
+        //9. Указать адрес, почтовый индекс, город доставки. Перейти к следующему шагу.
+        driver.findElement(By.xpath("//*[@id=\"delivery-address\"]/div/section/div[5]/div[1]/input")).sendKeys("Rayduzhna,3b");
+        driver.findElement(By.xpath("//*[@id=\"delivery-address\"]/div/section/div[7]/div[1]/input")).sendKeys("02218");
+        driver.findElement(By.xpath("//*[@id=\"delivery-address\"]/div/section/div[8]/div[1]/input")).sendKeys("Kyiv");
+        driver.findElement(By.xpath("//*[@id=\"delivery-address\"]/div/footer/button")).click();
+        //10. Оставить настройки доставки без изменений, перейти к шагу оплаты заказа.
+        driver.findElement(By.xpath("//*[@id=\"js-delivery\"]/button")).click();
+        //11. Выбрать любой способ оплаты. Отметить опцию «Я ознакомлен(а) и согласен(на) с Условиями обслуживания.» Оформить заказ.
+        driver.findElement(By.name("payment-option")).click();
+        driver.findElement(By.xpath("//*[@id=\"conditions_to_approve[terms-and-conditions]\"]")).click();
+        driver.findElement(By.xpath("//*[@id=\"payment-confirmation\"]/div[1]/button")).click();
+        //12. В открывшемся окне подтверждения заказа проверить следующие значения: -
+        // Пользователю отображается сообщение «Ваш заказ подтвержден» -
+        // В деталях заказа отображается одна позиция, название и цена товара соответствует значениям,
+        // которые отображались на странице товара.
+
+        //13. Вернуться на страницу товара и проверить изменения количества товара в наличии
+        // (в блоке справа, на вкладке «Подробнее о товаре»): количество товара должно уменьшиться на единицу.
+
+
+
+
+    }
+
+}
